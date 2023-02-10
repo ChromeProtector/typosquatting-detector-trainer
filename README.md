@@ -5,7 +5,6 @@ A collection of tools for training AI models (classification models) for typosqu
 
 1. Create tools to create traning data set using: 
  - https://github.com/zntrio/typogenerator
- - https://github.com/vpav/doppelganger
  
  and a text file with the list of domains.
 
