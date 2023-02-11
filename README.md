@@ -9,4 +9,4 @@ A collection of tools for training AI models (classification models) for typosqu
  and a text file with the list of domains.
 
 2. Create tools to create support vector machine classification models for https://github.com/mljs/libsvm library. 
-3. Create tools to create classification models for *https://github.com/karpathy/convnetjs* library.
+3. Create tools to create classification models for https://github.com/karpathy/convnetjs library.
