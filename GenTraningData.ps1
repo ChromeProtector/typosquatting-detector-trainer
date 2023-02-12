@@ -21,7 +21,7 @@ foreach ($protectedDomain in $protectedDomains)
     $cmd = 'go run .\cmd\typogen\main.go -s "$protectedDomain"'
     $out = Invoke-Expression -Command "$cmd"
     
-    $null = $lines.Add("['" + $protectedDomain + "',0]")
+    $null = $lines.Add("['" + $protectedDomain + "',2]")
 
     $i = 0
     foreach ($line in $out)
