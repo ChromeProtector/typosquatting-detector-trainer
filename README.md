@@ -3,7 +3,7 @@ A collection of tools for training AI models (classification models) for typosqu
 
 # Plan / roadmap
 
-1. Create tools to create traning data set using: 
+1. Create tools to create training data set using: 
  - https://github.com/zntrio/typogenerator
  
  and a text file with the list of domains.
