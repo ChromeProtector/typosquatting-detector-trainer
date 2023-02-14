@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "train": "node train_svm.js"
+    "train": "node models/svm/train_svm.js"
   },
   "dependencies": {
     "typosquatting-detector": "file:../typosquatting-detector"
