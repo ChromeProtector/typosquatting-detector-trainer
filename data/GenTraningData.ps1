@@ -5,19 +5,21 @@
     $outFile
 )
 
-$lines = [System.Collections.ArrayList]@()
-
 Push-Location
-
 Set-Location $typogeneratorPath
 
-foreach ($otherDomain in $otherDomains)
-{ 
-    $null = $lines.Add("['" + $otherDomain + "',0]")
-}
-
+$i = 0 
 foreach ($protectedDomain in $protectedDomains)
 { 
+    $i += 1
+    $lines = [System.Collections.ArrayList]@()
+
+
+    foreach ($otherDomain in $otherDomains)
+    { 
+        $null = $lines.Add("['" + $otherDomain + "',0]")
+    }
+
     $cmd = 'go run .\cmd\typogen\main.go -s "$protectedDomain"'
     $out = Invoke-Expression -Command "$cmd"
     
@@ -29,13 +31,17 @@ foreach ($protectedDomain in $protectedDomains)
         if ($i -ne 0)
         {        
             $parts = $line.Split(",")
-            $null = $lines.Add("['" + $parts[3].Trim("""") + "',1]")
+            $domain = $parts[3].Trim("""")
+
+            if ($domain -ne $protectedDomain)
+            {
+                $null = $lines.Add("['" + $domain + "',1]")
+            }
         }
         $i += 1
     }
+    ("[" + [string]::Join(",", $lines.ToArray()) + "]") | Out-File -FilePath $($outFile + "_$i") -Encoding ascii
+    Write-Host $lines.Count
 }
-("[" + [string]::Join(",", $lines.ToArray()) + "]") | Out-File -FilePath $outFile -Encoding ascii
 
 Pop-Location
-
-Write-Host $lines.Count
