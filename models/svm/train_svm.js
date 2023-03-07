@@ -1,7 +1,7 @@
-const _svm = require('typosquatting-detector/classification/2_svm')
-const _metrics = require('typosquatting-detector/typosquatting-metrics')
+const _svm = require('typosquatting-detector/lib/classification/2_svm')
+const _metrics = require('typosquatting-detector/lib/typosquatting-metrics')
 const fs = require('fs')
-const _classifier = require('typosquatting-detector/typosquatting-classification')
+const _classifier = require('typosquatting-detector/lib/typosquatting-classification')
 
 function getTrainingDataPath() {
     const args = process.argv.slice(2)
@@ -40,17 +40,14 @@ function transformData(data) {
 
         if (data[i][1] == 2)
         {
-            continue
+            data[i][1] = 0
         }
 
-        var url = data[i][0].replace(/"/g, "")
-
-        if (url.indexOf("http") != 0) {
-            url = "http://" + url
-        }
-        urls.push(url)
-        var vector = _metrics.getMetrics(url, protectedDomain)
+        var domain = data[i][0].replace(/"/g, "")
+		urls.push(domain)
+        var vector = _metrics.getMetrics(domain, protectedDomain)
         vectors.push(vector)
+		
         labels.push(data[i][1])
     }
     return [vectors, labels, protectedDomain, urls]
@@ -60,7 +57,6 @@ function verifyTraining(dataPrepared, model) {
     var computedLabels = []
     var samples = dataPrepared[0]
     var labels = dataPrepared[1]
-    var urls = dataPrepared[3]
 
     for (var i = 0; i < samples.length; i++) {
         var sample = samples[i]
@@ -73,13 +69,12 @@ function verifyTraining(dataPrepared, model) {
 
     for (var j = 0; j < computedLabels.length; j++) {
         if (computedLabels[j] != labels[j]) {
-            console.log(urls[j])
             fail += 1
+            console.log("Fail at: " + j)
         }
         else {
             ok += 1
         }
-
     }
 
     console.log("Training accuracy")
@@ -88,6 +83,7 @@ function verifyTraining(dataPrepared, model) {
 
 var data = getTrainingData()
 var dataPrepared = transformData(data)
-
 var model = _svm.train(dataPrepared[0], dataPrepared[1])
 verifyTraining(dataPrepared, model)
+
+console.log(JSON.stringify(model))
